@@ -1,18 +1,13 @@
-# AHK styleguide
+# Powershell styleguide
 
-We only use AutoHotkey v2.
 
-Everything must happen under the precondition that you have read the AutoHotkey v2 official documentation extremely carefully (you may think longer than usual)!
-
-NOTE: You can use what is in the code block below denoted with "utils.ahk" and "JXON.ahk".
 
 ## General style
 - write where feasible more smaller, atomic functions instead of fewer, larger ones.
 - don't do anonymous direct `return {...rest of object}`. First create an output object with some descriptive name, then return that like `return <output>;`
 - where "magic strings" are repeatedly used, consider making an enum.
 - you might define Registry classes (based on `Map`s) that store e.g. commands or plugins.
-- strongly consider splitting up complex `if` conditions into several statements on separate lines that create named variables. 
-Example of worse code:
+- strongly consider splitting up `if` condition it into several statements on separate lines that create named variables. Example of worse code:
 ```
 if !config.HasProp("hotkeys") || !IsObject(config.hotkeys) || config.hotkeys.Length() = 0 {
     return false }
@@ -26,17 +21,6 @@ if (hksMissing || hksNotAnObject || hksEmpty){
     return false }
 ```
 
-- use the newer `FuncA(x,y)` function syntax rather than the old `Func, %x%, %y%` command syntax
-- (if possible in AHK v2) always wrap `if` blocks in brackets, like `if [condition] { ... } `. The same is true for `for ...` blocks and other such cases.
-- put brackets on same line. `class Example {` instead of `class Example \newline {`
-- if we pass function handlers around, you perhaps shouldn't create a "regular/simple" function, but rather a function object/functor.
-- never use ternary ` ? ... :  ...` inside parameters. The ternary should be either on an own assignment line, or in an `if (...` statement.
-- loop or iterate or `for ... in` will fail if it's a `Map` object. Thus, if a loop fails (wrapped with `try catch`) in the `catch` section analyze whether it's a `Map` object and throw this message.
-- consider organizing closely related functions into classes with `static` methods, but ALWAYS keep the limitations about scope in AutoHotkey v2 in mind -- i.e. assumed-local: inside the body you might not have access to the global scope. So you'd need to declare `global` first. Only do this grouping into classes if you are *absolutely* sure nothing will break.
-- hardcode default values only inside the parameters of functions. Inside the function body, you must always specify that it's the default, e.g.
-`defaultTimeout = 3000`. Better yet, make a `default` object that contains all such fields (if it's 2 default values or more)
-- instead of `Sleep`, try using set timeout functions.
-- for Windows API calls you often use magic integers. Instead, collect them in an enum and document what each int does; also, add a comment directly above the API call that requires the magic iint, directly stating the magic int and wery briefly what it is (the main description, which should still be short, is in the enum)
 
 
 ### Error/exception handling
@@ -48,6 +32,7 @@ if (hksMissing || hksNotAnObject || hksEmpty){
 
 ### Naming
 - IMPORTANT: NEVER create variable names that differ from class or function names only in the casing. Bad example: `windowInfo := WindowInfo()`. Good example: `wInfo := WindowInfo()`
+- functions that are intended to be used internally in the script use regular camelCase
 - your function names should always start lowercase. Try to start them with a verb. Try not to use noun-only as function or method names.
 - Never use class names that contain `Manager`. Always be more creative.
 - use camelCase instead of PascalCase for non-static methods; PascalCase for `static` methods
@@ -68,22 +53,13 @@ VERY IMPORTANT: you need to STRICTLY follow all of the following points in this 
 ```
 - if inside a method/function a class is called, we need to refer to the global scope. At the start of the method/function, use the `global` (standalone) declaration (not `global <name>`)
 - IMPORTANT: ALWAYS keep the limitations about scope in AutoHotkey v2 in mind -- i.e. assumed-local: inside the body you might not have access to the global scope. So you'd need to declare `global` first. Only do this grouping into classes if you are *absolutely* sure nothing will break. Remember that AHK doesn't have hoisting. mind the scope limitations. position in file matters.
-- object declarations with newlines like 
-```
-windowInfo := {
-                title: title,
-                automationId: automationId,
-                <etc>
-}
-```
-are still not supported. You must either put it all on one line, or create a class to create such objects.
 
 
 ### Handling strings
 - IMPORTANT: When a string has variable parts or you want to concatenate some to insert a value in the middle, instead use a "continuation section".
 - use this together with the `Format(` function.
 Especially if you need to use quote marks (") or backticks (`) you MUST use these continuation sections.
-Example of bad code:
+Bad example:
 ```
 ; Use backticks for string values in maps
 if IsString(value) {
@@ -92,7 +68,8 @@ if IsString(value) {
     preview .= key ": " value
 }
 ```
-Example of good code:
+Good Example:
+
 ```
 ; Use backticks for string values in maps
 if IsString(value) {
@@ -199,8 +176,6 @@ Use your brain. You see that the example comment above doesn't actually explain 
 - beforehand check if path even exists
 - ALWAYS strictly non-overwriting. If a file already exists, write to an incremented filename instead.
 
-## Architecture
-- wrap PostMessage and Windows API calls in commented out functions with a fitting name and which have more comments documentation than usual
 
 
 # Task requirements 

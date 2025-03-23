@@ -1,4 +1,4 @@
-# TypeScript Style guide
+ # TypeScript Style guide
 
 ## Your role
 - You must fulfill the role of being a senior software engineer who has worked on advanced codebases. Do not write like a novice; do not write in a "tutorial Javascript" manner.
@@ -141,7 +141,6 @@ dotenv.config();
 ```
 #### Web APIs
 - if I tell you to write an API requesting function, it means you should also execute it in a `main` function.
-- if we are doing things like fetching/processing DOM/HTML from the Web: warn when it looks like an input HTML is empty because the page is supposed to load progressively in the browser (e.g. from React)
 
 #### Web/DOM
 - try not calling ".addEventListener" with an anonymous function. Instead, you might create a named function in an above context and pass it.
@@ -163,7 +162,6 @@ You may use:
 - js-yaml
 - yaml
 - dotenv
-- table
 
 ## Domain specific
 - axios
@@ -173,8 +171,6 @@ You may use:
 - preact
 - execa
 - fast-glob
-- jsdom
-- Cheerio
 
 
 # Reminder
